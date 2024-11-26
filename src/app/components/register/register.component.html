@@ -1,0 +1,24 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Register</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <input type="text" id="nombre" name="nombre" [(ngModel)]="formData.nombre" required placeholder="Nombre completo">
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" name="email" [(ngModel)]="formData.email" required placeholder="Email">
+      </div>
+      <div class="form-group">
+        <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="formData.password" required placeholder="Contraseña">
+      </div>
+      <div class="form-group">
+        <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" name="confirmPassword" [(ngModel)]="formData.confirmPassword" required placeholder="Confirmar contraseña">
+      </div>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <button type="submit">Registrate</button>
+    </form>
+    <p class="auth-link">
+      Ya tienes una cuenta? <a href="/login">Iniciar Sesión</a>
+    </p>
+  </div>
+</div>

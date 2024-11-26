@@ -1,0 +1,51 @@
+<div class="container">
+  <header>
+    <h1>Reseñas de Restaurantes</h1>
+    <p>Descubre y comparte experiencias gastronómicas</p>
+  </header>
+
+  <main>
+    <div class="restaurant-card" *ngFor="let restaurant of restaurants">
+      <div class="restaurant-image" [style.backgroundImage]="'url(' + restaurant.imagen + ')'"></div>
+      <div class="restaurant-info">
+        <h2>{{restaurant.nombre}}</h2>
+        <p class="description">{{restaurant.descripcion}}</p>
+        <p class="address">{{restaurant.direccion}}</p>
+      </div>
+      
+      <div class="reviews-section">
+        <h3>Reseñas de Clientes</h3>
+        <div class="reviews-list" *ngIf="restaurant.resenas.length > 0">
+          <div class="review-item" *ngFor="let review of restaurant.resenas">
+            <p class="review-text">"{{review.comentario}}"</p>
+            <small class="review-date">{{review.fecha | date:'dd/MM/yyyy'}}</small>
+          </div>
+        </div>
+        <p *ngIf="restaurant.resenas.length === 0" class="no-reviews">
+          Aún no hay reseñas para este restaurante.
+        </p>
+      </div>
+
+      <div class="review-actions">
+        <button *ngIf="selectedRestaurant !== restaurant" 
+                (click)="showReviewForm(restaurant)" 
+                class="review-button">
+          Escribir Reseña
+        </button>
+
+        <div class="review-form" *ngIf="selectedRestaurant === restaurant">
+          <h3>Escribir Nueva Reseña</h3>
+          <textarea
+            [(ngModel)]="newReview.comentario"
+            placeholder="Comparte tu experiencia en este restaurante..."
+            rows="4"
+          ></textarea>
+          <div class="buttons">
+            <button (click)="submitReview()" class="submit">Enviar Reseña</button>
+            <button (click)="cancelReview()" class="cancel">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

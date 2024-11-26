@@ -1,0 +1,33 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Login</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            [(ngModel)]="loginData.email" 
+            required
+            [class.error]="errorMessage && !loginData.email"
+            placeholder="email">
+      </div>
+      <div class="form-group">
+        <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="password" 
+              name="password" 
+              [(ngModel)]="loginData.password" 
+              required
+              [class.error]="errorMessage && !loginData.password"
+              placeholder="contraseña">
+      </div>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <button type="submit">Iniciar Sesión</button>
+    </form>
+    <p class="auth-link">
+      No tienes una cuenta? <a href="
+      /register">Registrate</a>
+    </p>
+  </div>
+</div>
