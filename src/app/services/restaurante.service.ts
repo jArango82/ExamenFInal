@@ -9,84 +9,43 @@ export class RestaurantService {
   private restaurants: Restaurant[] = [
     {
       id: 1,
-      nombre: 'La Casa del Sabor',
-      descripcion: 'Auténtica cocina española con un toque moderno',
-      direccion: 'Calle Mayor 123, Madrid',
-      imagen: 'https://images.unsplash.com/photo-1553621042-f6e147245754?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      resenas: [
-        {
-          id: 1,
-          restaurantId: 1,
-          comentario: '¡Increíble experiencia! La paella fue espectacular y el servicio muy atento. Los sabores son auténticos y el ambiente es muy acogedor. Definitivamente volveré.',
-          fecha: new Date('2024-01-15')
-        },
-        {
-          id: 2,
-          restaurantId: 1,
-          comentario: 'Muy buen ambiente y comida deliciosa. Los postres son excepcionales. El chef se acercó a nuestra mesa para asegurarse de que todo estaba a nuestro gusto.',
-          fecha: new Date('2024-01-10')
-        }
-      ]
+      nombre: 'Pico Rico',
+      descripcion: '44 Años de tradición y servicio',
+      direccion: 'CR 50 N 130 sur 69, Medellín, Antioquia 055440',
+      imagen: 'https://scontent.feoh1-1.fna.fbcdn.net/v/t39.30808-6/300852965_447209110760327_4741523203157338439_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHtAOSHGCgU7deHXq-m80gaedzu2TdVvuN53O7ZN1W-44mry_n0BkVbCAsMSZobGgB05EXADSXAGk0WS953VxjJ&_nc_ohc=KGuLt9sQqT8Q7kNvgE_amRK&_nc_zt=23&_nc_ht=scontent.feoh1-1.fna&_nc_gid=A3VK_nQnC9-C9fK7RiTe9KB&oh=00_AYB53BwjrT1VA22TJorg6l2K79E1ss0MgQHWnkBIECymsw&oe=674AD4D5',
+      resenas: []
     },
     {
       id: 2,
-      nombre: 'El Rincón Mexicano',
-      descripcion: 'Los mejores tacos y enchiladas de la ciudad',
-      direccion: 'Avenida Principal 456, Barcelona',
-      imagen: 'https://images.unsplash.com/photo-1553621042-f6e147245754?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      resenas: [
-        {
-          id: 3,
-          restaurantId: 2,
-          comentario: 'Los tacos al pastor son auténticos y el guacamole está muy bien preparado. Me encantó la salsa habanera casera. El servicio es rápido y el personal muy amable.',
-          fecha: new Date('2024-01-12')
-        }
-      ]
+      nombre: 'Sazones',
+      descripcion: 'Todo el sabor a tradicion',
+      direccion: 'Cra. 50 #125 Sur 166, Caldas, Antioquia',
+      imagen: 'https://scontent.feoh1-1.fna.fbcdn.net/v/t39.30808-6/300172994_199283235784300_6767840845295092706_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeG7uQnQmZG7-uQLuCbmwHnb_Bf6_IqLp8f8F_r8iounx4ihTD-HBWLd49WnAj7fPO7EpD11UWWAQOJKC_3fvEhv&_nc_ohc=YbqDgh8lBEoQ7kNvgGraFXj&_nc_zt=23&_nc_ht=scontent.feoh1-1.fna&_nc_gid=AQTKidQhI3hRLReT4QiMFW5&oh=00_AYDIATVVLeM1y6xM3vc-f1fDWx-j9uhN6BMXkqpSrejhjA&oe=674AD40B',
+      resenas: []
     },
     {
       id: 3,
-      nombre: 'Mediterráneo',
-      descripcion: 'Pescados y mariscos frescos del día',
-      direccion: 'Paseo Marítimo 789, Valencia',
-      imagen: 'https://images.unsplash.com/photo-1553621042-f6e147245754?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      resenas: [
-        {
-          id: 4,
-          restaurantId: 3,
-          comentario: 'Pescado fresco y bien preparado. La vista al mar es espectacular. Los mariscos son de primera calidad y la carta de vinos es excelente.',
-          fecha: new Date('2024-01-08')
-        }
-      ]
+      nombre: 'Burdeos',
+      descripcion: 'Parrilla y vino',
+      direccion: 'Cl. 131 Sur #49-52, Caldas, Antioquia',
+      imagen: 'https://lh3.googleusercontent.com/p/AF1QipP9UhvvcK8YuWFXLLTrdKlFhprfsyB7DM320SOC=s680-w680-h510',
+      resenas: []
     },
     {
       id: 4,
-      nombre: 'La Parrilla Argentina',
-      descripcion: 'Las mejores carnes a la brasa',
-      direccion: 'Plaza Central 321, Sevilla',
-      imagen: 'https://images.unsplash.com/photo-1553621042-f6e147245754?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      resenas: [
-        {
-          id: 5,
-          restaurantId: 4,
-          comentario: '¡La mejor carne que he probado en España! El chimichurri es auténtico y las guarniciones son generosas. El servicio es impecable.',
-          fecha: new Date('2024-01-14')
-        }
-      ]
+      nombre: 'Cheche',
+      descripcion: 'Resturante, café y bar',
+      direccion: 'Cra 47 #50-40, Caldas, Antioquia',
+      imagen: 'https://lh3.googleusercontent.com/p/AF1QipPTmwLTAENqiV5TLUEWsd6rWrYFHRcEwVzDpLvV=s680-w680-h510',
+      resenas: []
     },
     {
       id: 5,
-      nombre: 'Sushi Fusion',
-      descripcion: 'Cocina japonesa contemporánea',
-      direccion: 'Calle Nueva 654, Bilbao',
-      imagen: 'https://images.unsplash.com/photo-1553621042-f6e147245754?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      resenas: [
-        {
-          id: 6,
-          restaurantId: 5,
-          comentario: 'Rolls muy creativos y frescos. El servicio es excelente y la presentación de los platos es espectacular. Los cócteles japoneses son muy originales.',
-          fecha: new Date('2024-01-11')
-        }
-      ]
+      nombre: 'La abuela',
+      descripcion: 'Variedad al menú por un excelente precio',
+      direccion: 'Cra, 48, #128 Sur, 94, a 128 Sur, 48, Caldas, Antioquia',
+      imagen: 'https://lh3.googleusercontent.com/p/AF1QipPF4orCC0jNKDtJOUyuxnq65WMR-B5EK6bKFcTe=s680-w680-h510',
+      resenas: []
     }
   ];
 

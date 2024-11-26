@@ -69,31 +69,61 @@ export class reseñas {
   ];
 
   selectedRestaurant: Restaurant | null = null;
+  editingReview: Review | null = null;
   newReview = {
     comentario: ''
   };
 
   showReviewForm(restaurant: Restaurant): void {
     this.selectedRestaurant = restaurant;
+    this.editingReview = null;
     this.newReview.comentario = '';
   }
 
   submitReview(): void {
     if (this.selectedRestaurant && this.newReview.comentario.trim()) {
-      const review: Review = {
-        id: Math.random() * 1000000,
-        comentario: this.newReview.comentario,
-        fecha: new Date()
-      };
+      if (this.editingReview) {
+        // Actualizar reseña existente
+        const index = this.selectedRestaurant.resenas.findIndex(r => r.id === this.editingReview!.id);
+        if (index !== -1) {
+          this.selectedRestaurant.resenas[index] = {
+            ...this.editingReview,
+            comentario: this.newReview.comentario,
+            fecha: new Date()
+          };
+        }
+      } else {
+        // Crear nueva reseña
+        const review: Review = {
+          id: Math.random() * 1000000,
+          comentario: this.newReview.comentario,
+          fecha: new Date()
+        };
+        this.selectedRestaurant.resenas.push(review);
+      }
       
-      this.selectedRestaurant.resenas.push(review);
       this.selectedRestaurant = null;
+      this.editingReview = null;
       this.newReview.comentario = '';
+    }
+  }
+
+  editReview(restaurant: Restaurant, review: Review): void {
+    this.selectedRestaurant = restaurant;
+    this.editingReview = review;
+    this.newReview.comentario = review.comentario;
+  }
+
+  deleteReview(restaurant: Restaurant, reviewId: number): void {
+    const index = restaurant.resenas.findIndex(r => r.id === reviewId);
+    if (index !== -1) {
+      restaurant.resenas.splice(index, 1);
     }
   }
 
   cancelReview(): void {
     this.selectedRestaurant = null;
+    this.editingReview = null;
     this.newReview.comentario = '';
   }
 }
