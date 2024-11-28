@@ -106,3 +106,42 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 }
+
+/*nuevo*/
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ResenasService {
+  private apiUrl = 'http://localhost:5000/api/resenas';
+
+  constructor(private http: HttpClient) {}
+
+  crearResena(resena: any): Observable<any> {
+    return this.http.post(this.apiUrl, resena, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('auth_token')}`
+ // Envía el token en los headers
+      },
+    });
+  }
+
+  obtenerResenas(): Observable<any> {
+    return this.http.get(this.apiUrl, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('auth_token')}`
+ // Envía el token en los headers
+      },
+    });
+  }
+
+  eliminarResena(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('auth_token')}`
+, // Envía el token en los headers
+      },
+    });
+  }
+}
+/*fin nuevo*/

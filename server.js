@@ -11,7 +11,7 @@ const JWT_SECRET = '070320';
 
 app.use(cors({
   origin: 'http://localhost:4200',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -77,6 +77,7 @@ app.post('/api/registro', async (req, res) => {
   }
 });
 
+
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
   
@@ -119,6 +120,101 @@ app.post('/api/login', async (req, res) => {
       });
     }
   });
+  /*nuevo*/
+  const reviewSchema = new mongoose.Schema({
+    usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'usuarios', required: true }, // Relación con el usuario
+    restaurante: { type: String, required: true },
+    comentario: { type: String, required: true },
+    fecha: { type: Date, default: Date.now }
+  });
+  
+  const Review = mongoose.model('resenas', reviewSchema);
+
+
+  // Ruta para agregar una nueva reseña
+  app.post('/api/resenas', async (req, res) => {
+    const { restaurante, comentario } = req.body; 
+    const token = req.headers.authorization?.split(' ')[1];
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Token no proporcionado' });
+    }
+  
+    try {
+      const decoded = jwt.decode(token, JWT_SECRET);
+  
+      const nuevaResena = new Review({ 
+        usuarioId: decoded.user.id, // Obtener el ID del usuario del token
+        restaurante, 
+        comentario, 
+        fecha: Date.now() 
+      });
+  
+      await nuevaResena.save();
+  
+      res.status(201).json({
+        message: 'Reseña creada con éxito',
+        reseña: nuevaResena
+      });
+    } catch (error) {
+      console.error('Error al crear la reseña:', error);
+      res.status(500).json({
+        message: 'Error al crear la reseña',
+        error: error.message
+      });
+    }
+  });
+  
+  
+  
+
+  // Ruta para obtener todas las reseñas
+  app.get('/api/resenas', async (req, res) => {
+    try {
+      // Buscar todas las reseñas en la base de datos
+      const resenas = await Review.find(); // Usar 'Review' en lugar de 'Resena'
+  
+      if (resenas.length === 0) {
+        return res.status(404).json({ message: 'No hay reseñas disponibles' });
+      }
+  
+      res.status(200).json({ resenas });
+    } catch (error) {
+      console.error('Error al obtener las reseñas:', error);
+      res.status(500).json({
+        message: 'Error al obtener las reseñas',
+        error: error.message
+      });
+    }
+  });
+  
+
+  app.delete('/api/resenas/:id', async (req, res) => {
+    const { id } = req.params;
+    const token = req.headers.authorization?.split(' ')[1];
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Token no proporcionado' });
+    }
+  
+    try {
+      const decoded = jwt.decode(token, JWT_SECRET);
+      const resena = await Review.findOneAndDelete({ _id: id, usuarioId: decoded.user.id });
+  
+      if (!resena) {
+        return res.status(404).json({ message: 'Reseña no encontrada o no autorizada' });
+      }
+  
+      res.status(200).json({ message: 'Reseña eliminada con éxito' });
+    } catch (error) {
+      console.error('Error al eliminar la reseña:', error);
+      res.status(500).json({ message: 'Error al eliminar la reseña', error: error.message });
+    }
+  });
+  
+
+  /*finaliza nuevo*/
+  
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
