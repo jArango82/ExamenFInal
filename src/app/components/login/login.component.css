@@ -6,8 +6,9 @@
   background-color: #f5f5f5;
 }
 
+
 .auth-card {
-  background: white;
+  background:rgba(255, 255, 255, 0.3); /* Agrega un fondo semitransparente */
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -15,9 +16,10 @@
   max-width: 400px;
 }
 
+
 h2 {
   text-align: center;
-  color: #333;
+  color: #030303;
   margin-bottom: 1.5rem;
 }
 

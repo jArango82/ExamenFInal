@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+
 
 interface Review {
   id: number;
@@ -21,6 +23,7 @@ interface Restaurant {
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  providers: [AuthService],
   templateUrl: './reseña.component.html',
   styleUrls: ['./reseña.component.css']
 })
@@ -74,6 +77,8 @@ export class reseñas {
     comentario: ''
   };
 
+  
+
   showReviewForm(restaurant: Restaurant): void {
     this.selectedRestaurant = restaurant;
     this.editingReview = null;
@@ -82,6 +87,50 @@ export class reseñas {
 
   submitReview(): void {
     if (this.selectedRestaurant && this.newReview.comentario.trim()) {
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        console.error("No se encontró un token de autorización.");
+        return;
+    }
+
+    const review = {
+        restaurante: this.selectedRestaurant.nombre,
+        comentario: this.newReview.comentario,
+    };
+
+    fetch('http://localhost:5000/api/resenas', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(review),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Reseña creada con éxito:', data);
+
+            // Agregar la reseña al listado local después de confirmación del servidor
+            this.selectedRestaurant!.resenas.push({
+                id: data.reseña._id,
+                comentario: data.reseña.comentario,
+                fecha: new Date(data.reseña.fecha), // Convertir la fecha al formato adecuado
+            });
+
+            // Limpiar el formulario
+            this.selectedRestaurant = null;
+            this.editingReview = null;
+            this.newReview.comentario = '';
+        })
+        .catch((error) => {
+            console.error('Error al crear la reseña:', error);
+        });
+
       if (this.editingReview) {
         // Actualizar reseña existente
         const index = this.selectedRestaurant.resenas.findIndex(r => r.id === this.editingReview!.id);
@@ -92,19 +141,7 @@ export class reseñas {
             fecha: new Date()
           };
         }
-      } else {
-        // Crear nueva reseña
-        const review: Review = {
-          id: Math.random() * 1000000,
-          comentario: this.newReview.comentario,
-          fecha: new Date()
-        };
-        this.selectedRestaurant.resenas.push(review);
       }
-      
-      this.selectedRestaurant = null;
-      this.editingReview = null;
-      this.newReview.comentario = '';
     }
   }
 
@@ -119,6 +156,25 @@ export class reseñas {
     if (index !== -1) {
       restaurant.resenas.splice(index, 1);
     }
+
+    const endpoint = `http://localhost:5000/api/resenas/${reviewId}`;
+    const token = localStorage.getItem('auth_token');
+    fetch(endpoint, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        console.log(`Reseña con ID ${reviewId} eliminada del servidor.`);
+      })
+      .catch((error) => {
+        console.error("Error al eliminar la reseña:", error);
+      });
   }
 
   cancelReview(): void {

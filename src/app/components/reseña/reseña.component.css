@@ -4,6 +4,7 @@
   padding: 20px;
 }
 
+
 header {
   text-align: center;
   padding: 40px 0;
@@ -30,6 +31,7 @@ header p {
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   transition: transform 0.2s;
   overflow: hidden;
+  
 }
 
 .restaurant-card:hover {

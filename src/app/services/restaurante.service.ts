@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Restaurant, Review } from '../models/restaurante.model';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class RestaurantService {
   private restaurants: Restaurant[] = [
     {
