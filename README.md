@@ -9,9 +9,12 @@ Reseñas de restaurantes es una aplicación web diseñada para permitir a los us
 - **Leer reseñas**: Accede a reseñas de otros usuarios y descubre opiniones detalladas.
 - **Editar y Eliminar**: Los usuarios pueden editar y eliminar sus propias reseñas
 - **Interfaz amigable**: Diseñada para una navegación fácil y rápida.
+  
 
 ## Integrantes
 
 - **Juan Manuel Arango Bedoya**
 - **Rosa Maria Guerra Moreno**
+
+  - **Nota**: refrescar pagina despues de cada reseña
 
