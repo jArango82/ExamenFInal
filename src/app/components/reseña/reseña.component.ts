@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 interface Review {
   id: number;
   comentario: string;
   fecha: Date;
+  usuarioId: string;
 }
 
 interface Restaurant {
@@ -22,12 +24,14 @@ interface Restaurant {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   providers: [AuthService],
   templateUrl: './reseña.component.html',
   styleUrls: ['./reseña.component.css']
 })
 export class reseñas {
+  private apiUrl = 'http://localhost:5000/api/resenas';
+  usuarioLogueadoId: String | null = null;
   restaurants: Restaurant[] = [
     {
       id: 1,
@@ -77,7 +81,53 @@ export class reseñas {
     comentario: ''
   };
 
+  constructor(private authService: AuthService) {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      this.usuarioLogueadoId = payload.user.id;
+    }
+  }
+
+  ngOnInit(): void {
+    this.loadReviews();
+    console.log('Usuario logueado:', this.authService.getUserId());
+  }
+
+  loadReviews(): void {
+    fetch('http://localhost:5000/api/resenas', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error al cargar las reseñas: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Reseñas cargadas:', data);
   
+        data.resenas.forEach((resena: any) => {
+          const restaurant = this.restaurants.find(
+            (r) => r.nombre === resena.restaurante
+          );
+          if (restaurant) {
+            restaurant.resenas.push({
+              id: resena._id,
+              comentario: resena.comentario,
+              fecha: new Date(resena.fecha),
+              usuarioId: resena.usuarioId 
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Error al cargar las reseñas:', error);
+      });
+  }
 
   showReviewForm(restaurant: Restaurant): void {
     this.selectedRestaurant = restaurant;
@@ -96,6 +146,7 @@ export class reseñas {
     const review = {
         restaurante: this.selectedRestaurant.nombre,
         comentario: this.newReview.comentario,
+        usuarioId: this.usuarioLogueadoId
     };
 
     fetch('http://localhost:5000/api/resenas', {
@@ -115,14 +166,13 @@ export class reseñas {
         .then((data) => {
             console.log('Reseña creada con éxito:', data);
 
-            // Agregar la reseña al listado local después de confirmación del servidor
             this.selectedRestaurant!.resenas.push({
                 id: data.reseña._id,
                 comentario: data.reseña.comentario,
-                fecha: new Date(data.reseña.fecha), // Convertir la fecha al formato adecuado
+                fecha: new Date(data.reseña.fecha),
+                usuarioId: data.reseña.usuario
             });
 
-            // Limpiar el formulario
             this.selectedRestaurant = null;
             this.editingReview = null;
             this.newReview.comentario = '';
@@ -132,7 +182,6 @@ export class reseñas {
         });
 
       if (this.editingReview) {
-        // Actualizar reseña existente
         const index = this.selectedRestaurant.resenas.findIndex(r => r.id === this.editingReview!.id);
         if (index !== -1) {
           this.selectedRestaurant.resenas[index] = {
@@ -176,6 +225,12 @@ export class reseñas {
         console.error("Error al eliminar la reseña:", error);
       });
   }
+
+  puedeEditarEliminar(usuarioId: string): boolean {
+    console.log('Usuario ID de la reseña:', usuarioId);
+    console.log('Usuario logueado:', this.usuarioLogueadoId);
+  return usuarioId === this.usuarioLogueadoId;
+  }  
 
   cancelReview(): void {
     this.selectedRestaurant = null;

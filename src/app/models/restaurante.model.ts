@@ -12,4 +12,5 @@ export interface Restaurant {
     restaurantId: number;
     comentario: string;
     fecha: Date;
+    usuarioID: string
   }

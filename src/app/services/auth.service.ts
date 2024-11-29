@@ -27,6 +27,7 @@ export class AuthService {
   private tokenKey = 'auth_token';
   private userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();
+  private loggedInUserId: string | null = null;
 
   constructor(private http: HttpClient) {
     this.checkToken();
@@ -54,6 +55,11 @@ export class AuthService {
     }
   }
 
+  getUserId(): string | null {
+    const user = this.getUserData(); // Obtén los datos del usuario
+    return user ? user.id : null;   // Retorna el ID del usuario o null si no está definido
+  }
+
   register(data: RegisterData): Observable<any> {
     const formattedData = {
       ...data
@@ -66,6 +72,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response?.token) {
+            console.log('Usuario logueado', response.user);
             localStorage.setItem(this.tokenKey, response.token);
             localStorage.setItem('usuario', JSON.stringify(response.user));
           }

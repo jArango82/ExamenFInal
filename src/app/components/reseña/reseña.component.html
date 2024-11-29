@@ -12,11 +12,9 @@
         <p class="description">{{restaurant.descripcion}}</p>
         <p class="address">{{restaurant.direccion}}</p>
       </div>
-
       <!-- Sección de Reseñas -->
       <div class="reviews-section">
         <h3>Reseñas de Clientes</h3>
-        
         <!-- Si hay reseñas, se listan -->
         <div class="reviews-list" *ngIf="restaurant.resenas.length > 0">
           <div class="review-item" *ngFor="let review of restaurant.resenas">
@@ -26,22 +24,22 @@
             </div>
             <div class="review-actions-buttons">
               <!-- Botones para editar y eliminar reseña -->
-              <button class="edit-button" (click)="editReview(restaurant, review)">
-                <span class="material-icons">edit</span>
-              </button>
-              <button class="delete-button" (click)="deleteReview(restaurant, review.id)">
-                <span class="material-icons">delete</span>
-              </button>
+               <ng-container *ngIf="puedeEditarEliminar(review.usuarioId)">
+                <button class="edit-button" (click)="editReview(restaurant, review)">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button class="delete-button" (click)="deleteReview(restaurant, review.id)">
+                  <span class="material-icons">delete</span>
+                </button>
+              </ng-container>            
             </div>
           </div>
         </div>
-
         <!-- Mensaje si no hay reseñas -->
         <p *ngIf="restaurant.resenas.length === 0" class="no-reviews">
           Aún no hay reseñas para este restaurante.
         </p>
       </div>
-
       <!-- Formulario para escribir nueva reseña -->
       <div class="review-actions">
         <button *ngIf="selectedRestaurant !== restaurant" 
@@ -49,7 +47,6 @@
                 class="review-button">
           Escribir Reseña
         </button>
-
         <!-- Formulario de reseña cuando se selecciona un restaurante -->
         <div class="review-form" *ngIf="selectedRestaurant === restaurant">
           <h3>{{editingReview ? 'Editar' : 'Escribir Nueva'}} Reseña</h3>

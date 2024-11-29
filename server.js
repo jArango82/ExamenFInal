@@ -94,7 +94,6 @@ app.post('/api/login', async (req, res) => {
         return res.status(400).json({ message: 'Contraseña incorrecta' });
       }
   
-      // Crear el payload para el JWT
       const payload = {
         user: {
           id: user._id,
@@ -120,6 +119,7 @@ app.post('/api/login', async (req, res) => {
       });
     }
   });
+
   /*nuevo*/
   const reviewSchema = new mongoose.Schema({
     usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'usuarios', required: true }, // Relación con el usuario
@@ -144,10 +144,10 @@ app.post('/api/login', async (req, res) => {
       const decoded = jwt.decode(token, JWT_SECRET);
   
       const nuevaResena = new Review({ 
-        usuarioId: decoded.user.id, // Obtener el ID del usuario del token
+        usuarioId: decoded.user.id,
         restaurante, 
         comentario, 
-        fecha: Date.now() 
+        fecha: Date.now(),
       });
   
       await nuevaResena.save();
@@ -164,15 +164,11 @@ app.post('/api/login', async (req, res) => {
       });
     }
   });
-  
-  
-  
 
   // Ruta para obtener todas las reseñas
   app.get('/api/resenas', async (req, res) => {
     try {
-      // Buscar todas las reseñas en la base de datos
-      const resenas = await Review.find(); // Usar 'Review' en lugar de 'Resena'
+      const resenas = await Review.find();
   
       if (resenas.length === 0) {
         return res.status(404).json({ message: 'No hay reseñas disponibles' });
@@ -188,6 +184,30 @@ app.post('/api/login', async (req, res) => {
     }
   });
   
+  app.put('/api/resenas/:id', async (req, res) => {
+    const { id } = req.params;
+    const { usuarioId } = req.body;
+  
+    try {
+      const resena = await Resena.findById(id);
+  
+      if (!resena) {
+        return res.status(404).json({ mensaje: 'Reseña no encontrada.' });
+      }
+  
+      if (resena.usuarioId.toString() !== usuarioId) {
+        return res.status(403).json({ mensaje: 'No tienes permiso para editar esta reseña.' });
+      }
+  
+      resena.titulo = req.body.titulo || resena.titulo;
+      resena.contenido = req.body.contenido || resena.contenido;
+  
+      await resena.save();
+      res.status(200).json({ mensaje: 'Reseña actualizada exitosamente.', resena });
+    } catch (error) {
+      res.status(500).json({ mensaje: 'Error al actualizar la reseña.', error });
+    }
+  });
 
   app.delete('/api/resenas/:id', async (req, res) => {
     const { id } = req.params;
@@ -199,6 +219,7 @@ app.post('/api/login', async (req, res) => {
   
     try {
       const decoded = jwt.decode(token, JWT_SECRET);
+  
       const resena = await Review.findOneAndDelete({ _id: id, usuarioId: decoded.user.id });
   
       if (!resena) {
@@ -212,7 +233,6 @@ app.post('/api/login', async (req, res) => {
     }
   });
   
-
   /*finaliza nuevo*/
   
 
